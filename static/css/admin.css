@@ -1,0 +1,229 @@
+/* Variables */
+:root {
+    --primary-color: #FFD700; /* Amarillo dorado */
+    --primary-dark: #FFC000; /* Amarillo dorado más oscuro */
+    --secondary-color: #222222; /* Negro secundario */
+    --dark-bg: #121212; /* Negro principal para fondos */
+    --dark-card: #1E1E1E; /* Negro para tarjetas */
+    --text-color: #E0E0E0; /* Texto claro para fondos oscuros */
+    --text-dark: #333333; /* Texto oscuro para fondos claros */
+    --light-text: #AAAAAA; /* Texto gris claro */
+    --white: #FFFFFF;
+    --border-radius: 10px;
+    --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    --transition: all 0.3s ease;
+}
+
+/* Estilos para el panel de administración */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--dark-bg);
+    color: var(--text-color);
+}
+
+/* Sidebar */
+.sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    padding: 48px 0 0;
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .3);
+    background-color: var(--secondary-color) !important;
+}
+
+.sidebar .nav-link {
+    font-weight: 500;
+    color: var(--light-text);
+    padding: 0.75rem 1rem;
+    border-left: 3px solid transparent;
+}
+
+.sidebar .nav-link:hover {
+    color: var(--primary-color);
+    background-color: rgba(255, 215, 0, 0.05);
+}
+
+.sidebar .nav-link.active {
+    color: var(--primary-color);
+    background-color: rgba(255, 215, 0, 0.1);
+    border-left: 3px solid var(--primary-color);
+}
+
+.sidebar .nav-link .bi {
+    margin-right: 4px;
+    color: var(--light-text);
+}
+
+.sidebar .nav-link:hover .bi,
+.sidebar .nav-link.active .bi {
+    color: var(--primary-color);
+}
+
+/* Main content */
+main {
+    padding-top: 1.5rem;
+}
+
+/* Cards */
+.card {
+    border-radius: 10px;
+    box-shadow: var(--box-shadow);
+    margin-bottom: 20px;
+    overflow: hidden;
+    background-color: var(--dark-card);
+    border: 1px solid rgba(255, 215, 0, 0.1);
+    color: var(--text-color);
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+/* Tables */
+.table {
+    vertical-align: middle;
+    color: var(--text-color);
+}
+
+.table th {
+    font-weight: 600;
+    background-color: rgba(255, 215, 0, 0.1);
+    color: var(--primary-color);
+    border-color: rgba(255, 215, 0, 0.1);
+}
+
+.table td {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) > * {
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+.table-hover > tbody > tr:hover > * {
+    background-color: rgba(255, 215, 0, 0.05);
+}
+
+/* Login page */
+.card.shadow {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+    background-color: var(--dark-card);
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: var(--text-dark);
+}
+
+.btn-primary:hover, .btn-primary:focus {
+    background-color: var(--primary-dark);
+    border-color: var(--primary-dark);
+    color: var(--text-dark);
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+    color: var(--text-color);
+}
+
+.btn-secondary:hover, .btn-secondary:focus {
+    background-color: #333333;
+    border-color: #333333;
+    color: var(--text-color);
+}
+
+.btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+.btn-warning {
+    background-color: #ffc107;
+    border-color: #ffc107;
+    color: var(--text-dark);
+}
+
+/* Toast notifications */
+.toast {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    border: none;
+    background-color: var(--dark-card);
+    color: var(--text-color);
+}
+
+.toast-header {
+    background-color: rgba(255, 215, 0, 0.1);
+    color: var(--primary-color);
+    border-bottom: none;
+}
+
+.btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+/* Form controls */
+.form-control, .form-select {
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 215, 0, 0.1);
+    color: var(--text-color);
+}
+
+.form-control:focus, .form-select:focus {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: var(--primary-color);
+    color: var(--white);
+    box-shadow: 0 0 0 0.25rem rgba(255, 215, 0, 0.25);
+}
+
+.form-control::placeholder {
+    color: rgba(224, 224, 224, 0.5);
+}
+
+.form-label {
+    color: var(--text-color);
+}
+
+/* Badges */
+.badge.bg-success {
+    background-color: #28a745 !important;
+}
+
+.badge.bg-danger {
+    background-color: #dc3545 !important;
+}
+
+.badge.bg-warning {
+    background-color: #ffc107 !important;
+    color: var(--text-dark);
+}
+
+.badge.bg-primary {
+    background-color: var(--primary-color) !important;
+    color: var(--text-dark);
+}
+
+/* Responsive adjustments */
+@media (max-width: 767.98px) {
+    .sidebar {
+        position: static;
+        height: auto;
+        padding-top: 0;
+    }
+
+    main {
+        margin-left: 0 !important;
+    }
+}

@@ -1,0 +1,37 @@
+.logo-container {
+    display: inline-flex;
+    align-items: center;
+    font-family: 'Poppins', sans-serif;
+}
+
+.logo-icon {
+    width: 40px;
+    height: 40px;
+    background-color: #FFD700; /* Amarillo dorado */
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(255, 215, 0, 0.3);
+}
+
+.logo-icon::before {
+    content: 'P';
+    position: absolute;
+    font-weight: 900;
+    font-size: 24px;
+    color: #121212; /* Negro */
+}
+
+.logo-text {
+    font-weight: 700;
+    font-size: 20px;
+    color: #FFFFFF; /* Blanco */
+}
+
+.logo-text span {
+    color: #FFD700; /* Amarillo dorado */
+}
