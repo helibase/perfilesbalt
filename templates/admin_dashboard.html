@@ -1,219 +1,147 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - {{ app_title }}</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
-</head>
-<body>
-    <div class="container-fluid">
-        <div class="row">
-            <!-- Sidebar -->
-            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse">
-                <div class="position-sticky pt-3">
-                    <div class="text-center mb-4">
-                        <img src="{{ logo_url }}" alt="Logo" class="img-fluid mb-3" style="max-height: 60px;">
-                        <h5 class="text-white">{{ app_title }}</h5>
-                    </div>
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link active" href="{{ url_for('admin.dashboard') }}">
-                                <i class="bi bi-speedometer2 me-2"></i>
-                                Dashboard
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('admin.messages') }}">
-                                <i class="bi bi-envelope me-2"></i>
-                                Mensajes
-                                {% if stats.unread_messages > 0 %}
-                                <span class="badge bg-danger ms-2">{{ stats.unread_messages }}</span>
-                                {% endif %}
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('admin.subscriptions') }}">
-                                <i class="bi bi-people me-2"></i>
-                                Suscripciones
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('admin.settings') }}">
-                                <i class="bi bi-gear me-2"></i>
-                                Configuración
-                            </a>
-                        </li>
-                        <li class="nav-item mt-4">
-                            <a class="nav-link text-danger" href="{{ url_for('auth.logout') }}">
-                                <i class="bi bi-box-arrow-right me-2"></i>
-                                Cerrar Sesión
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
+{% extends 'admin_base.html' %}
 
-            <!-- Main content -->
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">Dashboard</h1>
-                    <div class="btn-toolbar mb-2 mb-md-0">
-                        <div class="btn-group me-2">
-                            <a href="{{ url_for('main.home') }}" target="_blank" class="btn btn-sm btn-outline-secondary">
-                                <i class="bi bi-eye"></i> Ver Sitio
-                            </a>
-                        </div>
-                    </div>
-                </div>
+{% block title %}Dashboard{% endblock %}
 
-                <!-- Stats Cards -->
-                <div class="row mb-4">
-                    <div class="col-md-4">
-                        <div class="card text-white bg-primary">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <h6 class="card-title">Total Mensajes</h6>
-                                        <h2 class="card-text">{{ stats.total_messages }}</h2>
-                                    </div>
-                                    <i class="bi bi-envelope fs-1"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card text-white bg-warning">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <h6 class="card-title">Mensajes No Leídos</h6>
-                                        <h2 class="card-text">{{ stats.unread_messages }}</h2>
-                                    </div>
-                                    <i class="bi bi-envelope-exclamation fs-1"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card text-white bg-success">
-                            <div class="card-body">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <h6 class="card-title">Suscripciones</h6>
-                                        <h2 class="card-text">{{ stats.total_subscriptions }}</h2>
-                                    </div>
-                                    <i class="bi bi-people fs-1"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+{% block header %}Dashboard{% endblock %}
 
-                <!-- Recent Messages -->
-                <h3 class="h4 mb-3">Mensajes Recientes</h3>
-                <div class="table-responsive mb-4">
-                    <table class="table table-striped table-hover">
-                        <thead>
-                            <tr>
-                                <th>Nombre</th>
-                                <th>Email</th>
-                                <th>Mensaje</th>
-                                <th>Fecha</th>
-                                <th>Estado</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for message in messages[:5] %}
-                            <tr>
-                                <td>{{ message.name }}</td>
-                                <td>{{ message.email }}</td>
-                                <td>{{ message.message[:50] }}{% if message.message|length > 50 %}...{% endif %}</td>
-                                <td>{{ message.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
-                                <td>
-                                    {% if message.read %}
-                                    <span class="badge bg-success">Leído</span>
-                                    {% else %}
-                                    <span class="badge bg-warning">No leído</span>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            {% else %}
-                            <tr>
-                                <td colspan="5" class="text-center">No hay mensajes</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                    {% if messages|length > 5 %}
-                    <div class="text-end">
-                        <a href="{{ url_for('admin.messages') }}" class="btn btn-sm btn-primary">Ver todos</a>
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="stat-icon">
+                        <i class="bi bi-envelope"></i>
                     </div>
-                    {% endif %}
-                </div>
-
-                <!-- Recent Subscriptions -->
-                <h3 class="h4 mb-3">Suscripciones Recientes</h3>
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover">
-                        <thead>
-                            <tr>
-                                <th>Email</th>
-                                <th>Fecha</th>
-                                <th>Estado</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for subscription in subscriptions[:5] %}
-                            <tr>
-                                <td>{{ subscription.email }}</td>
-                                <td>{{ subscription.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
-                                <td>
-                                    {% if subscription.active %}
-                                    <span class="badge bg-success">Activo</span>
-                                    {% else %}
-                                    <span class="badge bg-danger">Inactivo</span>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            {% else %}
-                            <tr>
-                                <td colspan="3" class="text-center">No hay suscripciones</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                    {% if subscriptions|length > 5 %}
-                    <div class="text-end">
-                        <a href="{{ url_for('admin.subscriptions') }}" class="btn btn-sm btn-primary">Ver todas</a>
+                    <div>
+                        <h5 class="card-title">Mensajes</h5>
+                        <h2 class="mb-0">{{ stats.total_messages }}</h2>
+                        <p class="text-muted mb-0">{{ stats.unread_messages }} sin leer</p>
                     </div>
-                    {% endif %}
                 </div>
-            </main>
+            </div>
         </div>
     </div>
-
-    <!-- Flash Messages -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-                {% for category, message in messages %}
-                    <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
-                        <div class="toast-header {% if category == 'success' %}bg-success text-white{% elif category == 'error' %}bg-danger text-white{% endif %}">
-                            <strong class="me-auto">Notificación</strong>
-                            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                        </div>
-                        <div class="toast-body">
-                            {{ message }}
-                        </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="stat-icon">
+                        <i class="bi bi-people"></i>
                     </div>
-                {% endfor %}
+                    <div>
+                        <h5 class="card-title">Suscriptores</h5>
+                        <h2 class="mb-0">{{ stats.total_subscriptions }}</h2>
+                        <p class="text-muted mb-0">Activos</p>
+                    </div>
+                </div>
             </div>
-        {% endif %}
-    {% endwith %}
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex align-items-center">
+                    <div class="stat-icon">
+                        <i class="bi bi-eye"></i>
+                    </div>
+                    <div>
+                        <h5 class="card-title">Visitas</h5>
+                        <h2 class="mb-0">--</h2>
+                        <p class="text-muted mb-0">Esta semana</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Mensajes recientes</h5>
+                <a href="{{ url_for('admin.messages') }}" class="btn btn-sm btn-primary">Ver todos</a>
+            </div>
+            <div class="card-body">
+                {% if messages %}
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Email</th>
+                                    <th>Fecha</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for message in messages[:5] %}
+                                    <tr>
+                                        <td>{{ message.name }}</td>
+                                        <td>{{ message.email }}</td>
+                                        <td>{{ message.created_at.strftime('%d/%m/%Y') }}</td>
+                                        <td>
+                                            {% if message.read %}
+                                                <span class="badge bg-success">Leído</span>
+                                            {% else %}
+                                                <span class="badge bg-warning">No leído</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">
+                        No hay mensajes de contacto.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Suscriptores recientes</h5>
+                <a href="{{ url_for('admin.subscriptions') }}" class="btn btn-sm btn-primary">Ver todos</a>
+            </div>
+            <div class="card-body">
+                {% if subscriptions %}
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Email</th>
+                                    <th>Fecha</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for subscription in subscriptions[:5] %}
+                                    <tr>
+                                        <td>{{ subscription.email }}</td>
+                                        <td>{{ subscription.created_at.strftime('%d/%m/%Y') }}</td>
+                                        <td>
+                                            {% if subscription.active %}
+                                                <span class="badge bg-success">Activo</span>
+                                            {% else %}
+                                                <span class="badge bg-danger">Inactivo</span>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">
+                        No hay suscriptores.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

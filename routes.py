@@ -123,6 +123,26 @@ def mark_message_read(message_id):
     db.session.commit()
     return jsonify({'success': True})
 
+# Nueva ruta para cambiar el estado de leído/no leído de un mensaje
+@admin_bp.route('/messages/toggle/<int:message_id>', methods=['POST'])
+@login_required
+def toggle_message_status(message_id):
+    message = ContactMessage.query.get_or_404(message_id)
+    message.read = not message.read
+    db.session.commit()
+    flash('Estado del mensaje actualizado', 'success')
+    return redirect(url_for('admin.messages'))
+
+# Nueva ruta para eliminar un mensaje
+@admin_bp.route('/messages/delete/<int:message_id>', methods=['POST'])
+@login_required
+def delete_message(message_id):
+    message = ContactMessage.query.get_or_404(message_id)
+    db.session.delete(message)
+    db.session.commit()
+    flash('Mensaje eliminado', 'success')
+    return redirect(url_for('admin.messages'))
+
 @admin_bp.route('/subscriptions')
 @login_required
 def subscriptions():

@@ -51,6 +51,13 @@ def create_app():
     # Set default app title
     app.config['APP_TITLE'] = os.environ.get('APP_TITLE', 'Perfiles Balt')
 
+    # Registrar filtros Jinja2
+    @app.template_filter('nl2br')
+    def nl2br_filter(s):
+        if s is None:
+            return ""
+        return s.replace('\n', '<br>')
+
     # Inicializar extensiones con la aplicación
     db.init_app(app)
     login_manager.init_app(app)
