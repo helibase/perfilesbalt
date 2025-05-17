@@ -3,9 +3,11 @@ import logging
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from flask_wtf.csrf import CSRFProtect
 from dotenv import load_dotenv
+from werkzeug.middleware.proxy_fix import ProxyFix
 
-# Cargar variables de entorno
+# Cargar variables de entorno desde .env en desarrollo
 load_dotenv()
 
 # Configurar logging
@@ -17,17 +19,21 @@ logging.basicConfig(
 # Inicializar extensiones
 db = SQLAlchemy()
 login_manager = LoginManager()
+csrf = CSRFProtect()
 
 def create_app():
     app = Flask(__name__, static_folder='static')
 
+    # Soporte para entornos detrás de proxy (Heroku)
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
+
     # Configuración general
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'supersecretflaskskey')
 
-    # Leer DATABASE_URL desde .env o Heroku
+    # Leer DATABASE_URL desde entorno (.env o Heroku config vars)
     database_url = os.environ.get('DATABASE_URL', 'sqlite:///perfilesbalt.db')
 
-    # Heroku usa postgres://, SQLAlchemy requiere postgresql://
+    # Corregir URL de Heroku si usa postgres:// en lugar de postgresql://
     if database_url.startswith("postgres://"):
         database_url = database_url.replace("postgres://", "postgresql://", 1)
 
@@ -45,7 +51,7 @@ def create_app():
     app.config['THEME'] = os.environ.get('APP_THEME', 'lofi')
     app.config['APP_TITLE'] = os.environ.get('APP_TITLE', 'Perfiles Balt')
 
-    # Filtro personalizado
+    # Filtro personalizado para templates
     @app.template_filter('nl2br')
     def nl2br_filter(s):
         if s is None:
@@ -55,6 +61,8 @@ def create_app():
     # Inicializar extensiones
     db.init_app(app)
     login_manager.init_app(app)
+    csrf.init_app(app)
+
     login_manager.login_view = 'auth.login'
 
     # Variables globales para templates
