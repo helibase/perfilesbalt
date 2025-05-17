@@ -1,2 +1,0 @@
--- Placeholder vacío para compatibilidad con PostgreSQL
--- Este archivo originalmente manipulaba PRAGMA en SQLite, lo cual no aplica aquí.
