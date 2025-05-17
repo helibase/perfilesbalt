@@ -33,14 +33,14 @@ def create_app():
     # Leer DATABASE_URL desde entorno (.env o Heroku config vars)
     database_url = os.environ.get('DATABASE_URL', 'sqlite:///perfilesbalt.db')
 
-    # Corregir URL de Heroku si usa postgres:// en lugar de postgresql://
+    # Heroku usa postgres:// en vez de postgresql://
     if database_url.startswith("postgres://"):
         database_url = database_url.replace("postgres://", "postgresql://", 1)
 
     app.config['SQLALCHEMY_DATABASE_URI'] = database_url
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-    # Configuración de logo
+    # Configuración visual del sitio
     def get_logo_url():
         custom_logo_path = os.path.join(app.root_path, 'static', 'logo.png')
         if os.path.exists(custom_logo_path) and os.stat(custom_logo_path).st_size > 0:
